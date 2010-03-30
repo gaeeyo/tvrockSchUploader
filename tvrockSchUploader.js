@@ -9,17 +9,7 @@
 //   [slot]        0～3の数値(未指定の場合0)
 //
 
-// 色の設定
-//  "{COMPNAME}=#RRGGBB" か "#RRGGBB" のどちらかで指定
-//  COMPNAMEはtvrock.schのCOMPNAMEの先頭と末尾の文字列になる
-//  (例> "MAINPC"=>"MC", "SUBPC"=>"SC")
-var _devColors = [
-	//'MC:Cap=#887744',
-	//'SC=#447788',
-	'#777777'
-];
-
-var _userAgent = 'tvrockSchUploader/1.2.0';
+var _userAgent = 'tvrockSchUploader/1.1.0';
 var _uploadUrl = 'http://cal.syoboi.jp/sch_upload';
  
 main(WScript.Arguments);
@@ -84,12 +74,11 @@ function upload(user, pass, sch_data, sch_epgurl, slot)
 			}
 		}
 	};
-	http.send(''
-		+'devcolors='+encodeURIComponent(_devColors.join("\t"))
+	http.send(
+		'data='+encodeURIComponent(sch_data)
 		+'&epgurl='+encodeURIComponent(
 			(sch_epgurl != '' ? sch_epgurl+'reg?i={XID}' : '')
 		)
-		+'&data='+encodeURIComponent(sch_data)
 	);
 }
 
@@ -104,8 +93,7 @@ function loadSchFile(path)
 	var items = [];
 	items.add = function(item) {
 		if (item.VALIDATE != '0') {
-			var compname = item.COMPNAME.substr(0,1) + item.COMPNAME.slice(-1) + ':';
-			item.DEV = compname + devMap[item.DEVNO];
+			item.DEV = devMap[item.DEVNO];
 			item.OFFSET = item.START - item.STBK;
 			//WScript.Echo([item.START, item.END, item.DEV, item.TITLE, item.STATION, item.SUBTITLE]);
 
@@ -125,7 +113,7 @@ function loadSchFile(path)
 				number = cps[1];
 				item = {idx:number};
 			}
-			if (cps[2].match(/^(TITLE|STATION|START|STBK|END|DEVNO|SUBTITLE|VALIDATE|UNIQID|COMPNAME)$/)) {
+			if (cps[2].match(/^(TITLE|STATION|START|STBK|END|DEVNO|SUBTITLE|VALIDATE|UNIQID)$/)) {
 				item[cps[2]] = cps[3];
 			}
 		}
