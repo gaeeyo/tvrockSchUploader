@@ -19,7 +19,7 @@ var _devColors = [
 	'#777777'
 ];
 
-var _userAgent = 'tvrockSchUploader/1.2.0';
+var _userAgent = 'tvrockSchUploader/1.2.1';
 var _uploadUrl = 'http://cal.syoboi.jp/sch_upload';
  
 main(WScript.Arguments);
@@ -51,7 +51,12 @@ function formatItems(items)
 			item.DEV,
 			tsvEscape(item.TITLE),
 			tsvEscape(item.STATION),
-			tsvEscape(item.SUBTITLE),
+			tsvEscape(
+				[
+					(item.NUMBER != '0' ? '#'+item.NUMBER : ''),
+					(item.SUBTITLE != '–¢’è' ? item.SUBTITLE : '')
+				].join(' ')
+			),
 			item.OFFSET,
 			item.UNIQID
 		].join("\t")+"\n";
@@ -125,7 +130,7 @@ function loadSchFile(path)
 				number = cps[1];
 				item = {idx:number};
 			}
-			if (cps[2].match(/^(TITLE|STATION|START|STBK|END|DEVNO|SUBTITLE|VALIDATE|UNIQID|COMPNAME)$/)) {
+			if (cps[2].match(/^(TITLE|STATION|START|STBK|END|DEVNO|SUBTITLE|VALIDATE|UNIQID|COMPNAME|NUMBER)$/)) {
 				item[cps[2]] = cps[3];
 			}
 		}
