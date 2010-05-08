@@ -19,7 +19,7 @@ var _devColors = [
 	'#777777'
 ];
 
-var _userAgent = 'tvrockSchUploader/1.2.1';
+var _userAgent = 'tvrockSchUploader/1.2.2';
 var _uploadUrl = 'http://cal.syoboi.jp/sch_upload';
  
 main(WScript.Arguments);
@@ -76,7 +76,9 @@ function upload(user, pass, sch_data, sch_epgurl, slot)
 {
 	var http = new ActiveXObject('MSXML2.XMLHTTP');
 	
-	http.Open('POST', _uploadUrl+'?slot='+slot, false, user, pass);
+	http.Open('POST', _uploadUrl+'?slot='+slot, false,
+		encodeURIComponent(user), encodeURIComponent(pass)
+	);
 	http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	http.setRequestHeader('User-agent', _userAgent);
 	http.onreadystatechange = function(){
